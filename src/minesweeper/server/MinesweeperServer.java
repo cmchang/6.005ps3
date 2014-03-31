@@ -13,6 +13,7 @@ public class MinesweeperServer {
      * True if the server should _not_ disconnect a client after a BOOM message.
      */
     private final boolean debug;
+    private final LinkedList<Socket> sockets;
 
     /**
      * Make a MinesweeperServer that listens for connections on port.
@@ -22,6 +23,7 @@ public class MinesweeperServer {
     public MinesweeperServer(int port, boolean debug) throws IOException {
         serverSocket = new ServerSocket(port);
         this.debug = debug;
+        this.sockets = new LinkedList<Socket>();
     }
 
     /**
@@ -35,18 +37,36 @@ public class MinesweeperServer {
         while (true) {
             // block until a client connects
             Socket socket = serverSocket.accept();
+            sockets.add(socket);
 
             // handle the client
+            Thread client = new Thread(new ClientServerRequestHandler(socket));
+            
+            
+        }
+    }
+
+    public class ClientServerRequestHandler implements Runnable{
+        private Socket socket;
+        public ClientServerRequestHandler(Socket socket){
+            this.socket = socket;
+        }
+        
+        public void run(){
             try {
                 handleConnection(socket);
             } catch (IOException e) {
                 e.printStackTrace(); // but don't terminate serve()
             } finally {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
+    
     /**
      * Handle a single client connection. Returns when client disconnects.
      * 
