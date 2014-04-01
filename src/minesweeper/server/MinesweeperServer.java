@@ -22,9 +22,10 @@ public class MinesweeperServer {
      * 
      * @param port port number, requires 0 <= port <= 65535
      */
-    public MinesweeperServer(int port, boolean debug) throws IOException {
+    public MinesweeperServer(int port, boolean debug, Board board) throws IOException {
         serverSocket = new ServerSocket(port);
         this.debug = debug;
+        this.board = board;
     }
 
     /**
@@ -251,7 +252,7 @@ public class MinesweeperServer {
         }
         
         //create server instance
-        MinesweeperServer server = new MinesweeperServer(port, debug);
+        MinesweeperServer server = new MinesweeperServer(port, debug, board);
         server.serve();
     }
 }

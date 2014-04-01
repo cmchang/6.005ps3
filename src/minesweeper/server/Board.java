@@ -1,6 +1,9 @@
 package minesweeper.server;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +54,28 @@ public class Board {
         //TODO:
         sizeX = 0;
         sizeY = 0;
+        
+      //read in file
+        ArrayList<String> linesInFile = new ArrayList<String>();
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+          //add all lines to linesInFile
+            String line = reader.readLine();
+            while (line != null) {
+                linesInFile.add(line);
+                line = reader.readLine();
+            }
+            reader.close();
+            
+            String firstLine = linesInFile.get(0);
+            sizeX = //////////
+            
+            linesInFile.remove(0); //now only the board contents remain
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Couldn't read in file.");
+        } 
     }
     
     private boolean addRandomizedBomb(){
@@ -96,24 +121,29 @@ public class Board {
         return board;
     }
     
+    public synchronized boolean isValidPoint(int i, int j) {
+        return (i < 0 || j < 0 || i >= this.sizeX || j >= this.sizeY);
+
+    }
+    
     private int getNeighboringBombNum(int i, int j){
         int bombCount = 0;
-        if(j-1 >= 0){ // top neighbor
+        if(isValidPoint(i, j-1)){ // top neighbor
             bombCount += Board.get(i).get(j-1).isBomb();
-        }else if(i-1 >= 0 && j-1 >= 0){ //top-left corner neighbor
+        }else if(isValidPoint(i-1, j-1)){ //top-left corner neighbor
             bombCount += Board.get(i-1).get(j-1).isBomb();
-        }else if(i-1 >= 0){ // left neighbor
+        }else if(isValidPoint(i-1, j)){ // left neighbor
             bombCount += Board.get(i-1).get(j).isBomb();
-        }else if(i-1 >= 0 && j+1 >= 0){ //bottom-left corner neighbor
+        }else if(isValidPoint(i-1, j+1)){ //bottom-left corner neighbor
             bombCount += Board.get(i-1).get(j+1).isBomb();
-        }else if(j+1 >= 0){ //bottom corner neighbor
+        }else if(isValidPoint(i, j+1)){ //bottom corner neighbor
             bombCount += Board.get(i).get(j+1).isBomb();
-        }else if(i+1 >= 0 && j+1 >= 0){ //bottom-right corner neighbor
+        }else if(isValidPoint(i+1, j+1)){ //bottom-right corner neighbor
             bombCount += Board.get(i+1).get(j+1).isBomb();
-        }else if(i+1 >= 0){ //right neighbor
+        }else if(isValidPoint(i+1, j)){ //right neighbor
             bombCount += Board.get(i+1).get(j).isBomb();
-        }else if(i+1 >= 0 && j+1 >= 0){ //top-right corner neighbor
-            bombCount += Board.get(i+1).get(j+1).isBomb();
+        }else if(isValidPoint(i+1, j-1)){ //top-right corner neighbor
+            bombCount += Board.get(i+1).get(j-11).isBomb();
         }
         return bombCount;
     }
@@ -130,30 +160,33 @@ public class Board {
         }
     }
     
-    public void dig (int i, int j){
+    public String dig (int i, int j){
         boolean explosion = false;
-        if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
+        if(isValidPoint(i, j)){
             explosion = Board.get(i).get(j).dig();
             if(explosion){
-                //message BOOM!!!
-                //TODO: recursively dig neighbors!  
-                digNeighbors(i,j);
+                if(debug){
+                    return "Boom!\n"; 
+                }else{
+                    return "Game Over!\n";
+                }
             }else{ //not a bomb!
                 if(getNeighboringBombNum(i,j) == 0){
                     digNeighbors(i,j);
                 }
             }
         }
+        return look();
     }
     
     public void digNeighbors(int i, int j){
-        if(j-1 >= 0){ // top neighbor
+        if(isValidPoint(i, j-1)){ // top neighbor
             if(getNeighboringBombNum(i,j-1) == 0) dig(i,j-1);
-        }else if(j+1 <= sizeY){ //bottom neighbor
+        }else if(isValidPoint(i, j+1)){ //bottom neighbor
             if(getNeighboringBombNum(i,j+1) == 0) dig(i,j+1);
-        }else if(i-1 >= 0){ //left neighbor
+        }else if(isValidPoint(i-1, j)){ //left neighbor
             if(getNeighboringBombNum(i-1,j) == 0) dig(i-1,j);
-        }else if(i+1 <= sizeX){ //right neighbor
+        }else if(isValidPoint(i+1, j)){ //right neighbor
             if(getNeighboringBombNum(i+1,j) == 0) dig(i+1,j);
         }
         
