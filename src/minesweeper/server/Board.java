@@ -12,8 +12,8 @@ import java.util.Random;
  */
 public class Board {
     private List<List<Cell>> Board = Collections.synchronizedList(new LinkedList<List<Cell>>());
-    private final int sizeX;
-    private final int sizeY;
+    private int sizeX;
+    private int sizeY;
     private final boolean debug;
     
     /**
@@ -32,9 +32,10 @@ public class Board {
         createBoard();
     }
     
-//    public Board(boolean debug, File file){
-//        
-//    }
+    public Board(boolean debug, File file){
+        this.debug = debug;
+        createBoard(file);
+    }
     
     private void createBoard(){
         for(int i = 0; i < sizeX; i++){
@@ -44,6 +45,12 @@ public class Board {
             }
             Board.add(columns);
         }
+    }
+    
+    private void createBoard(File file){
+        //TODO:
+        sizeX = 0;
+        sizeY = 0;
     }
     
     private boolean addRandomizedBomb(){

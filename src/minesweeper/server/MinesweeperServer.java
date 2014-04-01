@@ -13,7 +13,10 @@ public class MinesweeperServer {
      * True if the server should _not_ disconnect a client after a BOOM message.
      */
     private final boolean debug;
-
+    private final Object LOCK = new Object();
+    public static int numConnections = 0;
+    private static Board board;
+    
     /**
      * Make a MinesweeperServer that listens for connections on port.
      * 
@@ -38,6 +41,11 @@ public class MinesweeperServer {
 
             // handle the client
             Thread client = new Thread(new ClientServerRequestHandler(socket));
+            
+            //count the number of connections
+            synchronized(LOCK){
+                numConnections +=1;
+            }
         }
     }
 
@@ -55,6 +63,9 @@ public class MinesweeperServer {
             } finally {
                 try {
                     socket.close();
+                    synchronized(LOCK){
+                        numConnections -=1;
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -101,25 +112,25 @@ public class MinesweeperServer {
         String[] tokens = input.split(" ");
         if (tokens[0].equals("look")) {
             // 'look' request
-            // TODO Question 5
+            return board.look();
         } else if (tokens[0].equals("help")) {
             // 'help' request
-            // TODO Question 5
+            return "Valid commands are look, dig, flag, or deflag. To exit type bye.\n";
         } else if (tokens[0].equals("bye")) {
             // 'bye' request
-            // TODO Question 5
+            return "Thanks for playing. Bye.";
         } else {
             int x = Integer.parseInt(tokens[1]);
             int y = Integer.parseInt(tokens[2]);
             if (tokens[0].equals("dig")) {
                 // 'dig x y' request
-                // TODO Question 5
+                board.dig(x,y);
             } else if (tokens[0].equals("flag")) {
                 // 'flag x y' request
-                // TODO Question 5
+                board.flag(x,y);
             } else if (tokens[0].equals("deflag")) {
                 // 'deflag x y' request
-                // TODO Question 5
+                board.deflag(x,y);
             }
         }
         // Should never get here--make sure to return in each of the valid cases above.
