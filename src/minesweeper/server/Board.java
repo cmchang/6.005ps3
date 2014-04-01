@@ -157,9 +157,6 @@ public class Board {
     private int getNeighboringBombNum(int i, int j){
         int bombCount = 0;
         if(isValidPoint(i, j-1)){ // top neighbor
-            System.out.println("board size: " +  sizeX + ", " + sizeY);
-            System.out.println("i: "+ i + ", j: "+ (j-1));
-            System.out.println(isValidPoint(i, j-1));
             bombCount += Board.get(i).get(j-1).isBomb();
         }else if(isValidPoint(i-1, j-1)){ //top-left corner neighbor
             bombCount += Board.get(i-1).get(j-1).isBomb();
@@ -179,16 +176,19 @@ public class Board {
         return bombCount;
     }
  
-    public void flag (int i, int j){
+    public String flag (int i, int j){
         if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
             Board.get(i).get(j).flag();
         }
+        
+        return look();
     }
     
-    public void deflag (int i, int j){
+    public String deflag (int i, int j){
         if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
             Board.get(i).get(j).deflag();
         }
+        return look();
     }
     
     public String dig (int i, int j){

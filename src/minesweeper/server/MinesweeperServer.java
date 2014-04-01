@@ -124,6 +124,8 @@ public class MinesweeperServer {
             return null;
         }
         String[] tokens = input.split(" ");
+        System.out.println(tokens[0]);
+        
         if (tokens[0].equals("look")) {
             // 'look' request
             return board.look();
@@ -138,13 +140,13 @@ public class MinesweeperServer {
             int y = Integer.parseInt(tokens[2]);
             if (tokens[0].equals("dig")) {
                 // 'dig x y' request
-                board.dig(x,y);
+                return board.dig(x,y);
             } else if (tokens[0].equals("flag")) {
                 // 'flag x y' request
-                board.flag(x,y);
+                return board.flag(x,y);
             } else if (tokens[0].equals("deflag")) {
                 // 'deflag x y' request
-                board.deflag(x,y);
+                return board.deflag(x,y);
             }
         }
         // Should never get here--make sure to return in each of the valid cases above.
