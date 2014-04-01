@@ -94,7 +94,7 @@ public class MinesweeperServer {
                 if(output != null) {
                     if (output.equals("Thanks for playing. Bye.")) {
                         break;
-                    } else if (output.equals("Game over.")) {
+                    } else if (output.equals("Game over!")) {
                         out.print("BOOM!\n");
                         out.flush();
                         break;
@@ -124,10 +124,10 @@ public class MinesweeperServer {
             return null;
         }
         String[] tokens = input.split(" ");
-        System.out.println(tokens[0]);
         
         if (tokens[0].equals("look")) {
             // 'look' request
+//            return board.showBombs(); // for debugging purposes only
             return board.look();
         } else if (tokens[0].equals("help")) {
             // 'help' request

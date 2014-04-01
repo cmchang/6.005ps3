@@ -40,6 +40,7 @@ public class Board {
     }
     
     private void createBoard(){
+        System.out.println("Create Board " + sizeX + ", " + sizeY);
         for(int i = 0; i < sizeX; i++){
             List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
             for(int j = 0; j < sizeY; j++){
@@ -50,7 +51,8 @@ public class Board {
     }
     
     private void createBoard(File file){
-        
+        System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
+
         //read in file
         ArrayList<String> linesInFile = new ArrayList<String>();
         BufferedReader reader;
@@ -83,7 +85,7 @@ public class Board {
                     throw new RuntimeException("File improperly formatted.");
                 } else {
                     char[] lineOfChars = lineNoSpace.toCharArray();
-                    for(char curChar: lineOfChars){
+                    for(char curChar: lineOfChars){ //REDO: BOARD is rotated
                         List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
                         if(curChar == 1){
                             column.add(new Cell(true));
@@ -105,7 +107,7 @@ public class Board {
     
     private boolean addRandomizedBomb(){
         Random randNumGenerator = new Random(); 
-        int randNum = randNumGenerator.nextInt(3); //generates random integer from 0 to 3
+        int randNum = randNumGenerator.nextInt(4); //generates random integer from 0 (inclusive) to 4 (exclusive)
         if(randNum == 0){ // 1/4 chance of being 0
             return true;
         }
@@ -115,8 +117,8 @@ public class Board {
     public String look(){
         String board = "";
         String cellState;
-        for(int i = 0; i < sizeX; i++){
-            for(int j = 0; j < sizeY; j++){
+        for(int j = 0; j < sizeY; j++){
+            for(int i = 0; i < sizeX; i++){
                 cellState = Board.get(i).get(j).look();
                 switch(cellState){
                 case "untouched": board += "- ";
@@ -140,8 +142,10 @@ public class Board {
             for(int j = 0; j < sizeY; j++){
                 isCellBomb = Board.get(i).get(j).isBomb();
                 switch(isCellBomb){
-                case 0: board += "-";
-                case 1:   board += "B";
+                case 0: board += "- ";
+                    break;
+                case 1:   board += "B ";
+                    break;
                 }
             }
             board +="\r\n";
@@ -156,22 +160,13 @@ public class Board {
     
     private int getNeighboringBombNum(int i, int j){
         int bombCount = 0;
-        if(isValidPoint(i, j-1)){ // top neighbor
-            bombCount += Board.get(i).get(j-1).isBomb();
-        }else if(isValidPoint(i-1, j-1)){ //top-left corner neighbor
-            bombCount += Board.get(i-1).get(j-1).isBomb();
-        }else if(isValidPoint(i-1, j)){ // left neighbor
-            bombCount += Board.get(i-1).get(j).isBomb();
-        }else if(isValidPoint(i-1, j+1)){ //bottom-left corner neighbor
-            bombCount += Board.get(i-1).get(j+1).isBomb();
-        }else if(isValidPoint(i, j+1)){ //bottom corner neighbor
-            bombCount += Board.get(i).get(j+1).isBomb();
-        }else if(isValidPoint(i+1, j+1)){ //bottom-right corner neighbor
-            bombCount += Board.get(i+1).get(j+1).isBomb();
-        }else if(isValidPoint(i+1, j)){ //right neighbor
-            bombCount += Board.get(i+1).get(j).isBomb();
-        }else if(isValidPoint(i+1, j-1)){ //top-right corner neighbor
-            bombCount += Board.get(i+1).get(j-11).isBomb();
+
+        for(int x = i-1; x<= i+1; x++){
+            for(int y = j-1; y <= j+1; y++){
+                if(isValidPoint(x, y)){
+                    bombCount += Board.get(x).get(y).isBomb();
+                }
+            }
         }
         return bombCount;
     }
@@ -193,32 +188,34 @@ public class Board {
     
     public String dig (int i, int j){
         boolean explosion = false;
-        if(isValidPoint(i, j)){
-            explosion = Board.get(i).get(j).dig();
-            if(explosion){
-                if(debug){
-                    return "Boom!\n"; 
-                }else{
-                    return "Game Over!\n";
-                }
-            }else{ //not a bomb!
+        
+        if(isValidPoint(i, j) ){
+            Cell curCell = Board.get(i).get(j);
+            if(curCell.isUntouched()){
+                explosion = curCell.dig();
+                
+                System.out.println(i + ", "+ j);
                 if(getNeighboringBombNum(i,j) == 0){
+                    System.out.println("digging neighbors");
                     digNeighbors(i,j);
+                }
+                
+                if(explosion){
+                    return "BOOM!\n";
                 }
             }
         }
         return look();
     }
     
+    //if called, guaranteed that no neighboring bombs (b/c placement in dig method)
     public void digNeighbors(int i, int j){
-        if(isValidPoint(i, j-1)){ // top neighbor
-            if(getNeighboringBombNum(i,j-1) == 0) dig(i,j-1);
-        }else if(isValidPoint(i, j+1)){ //bottom neighbor
-            if(getNeighboringBombNum(i,j+1) == 0) dig(i,j+1);
-        }else if(isValidPoint(i-1, j)){ //left neighbor
-            if(getNeighboringBombNum(i-1,j) == 0) dig(i-1,j);
-        }else if(isValidPoint(i+1, j)){ //right neighbor
-            if(getNeighboringBombNum(i+1,j) == 0) dig(i+1,j);
+        for(int x = i-1; x<= i+1; x++){
+            for(int y = j-1; y <= j+1; y++){
+                System.out.println("dig: " + x + ", " + y);
+                dig(x,y);
+            }
         }
+        
     }
 }

@@ -37,4 +37,8 @@ public class Cell {
         }
         return 0;
     }
+    
+    public boolean isUntouched(){
+        return (state.equals("untouched"));
+    }
 }
