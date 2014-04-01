@@ -11,7 +11,6 @@ import java.util.Random;
 
 /**
  * This data structure represents a minesweeper board.
- *
  */
 public class Board {
     private List<List<Cell>> Board = Collections.synchronizedList(new LinkedList<List<Cell>>());
@@ -51,11 +50,8 @@ public class Board {
     }
     
     private void createBoard(File file){
-        //TODO:
-        sizeX = 0;
-        sizeY = 0;
         
-      //read in file
+        //read in file
         ArrayList<String> linesInFile = new ArrayList<String>();
         BufferedReader reader;
         try {
@@ -218,6 +214,5 @@ public class Board {
         }else if(isValidPoint(i+1, j)){ //right neighbor
             if(getNeighboringBombNum(i+1,j) == 0) dig(i+1,j);
         }
-        
     }
 }

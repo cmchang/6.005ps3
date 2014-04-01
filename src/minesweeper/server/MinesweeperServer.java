@@ -42,6 +42,7 @@ public class MinesweeperServer {
 
             // handle the client
             Thread client = new Thread(new ClientServerRequestHandler(socket));
+            client.start();
             
             //count the number of connections
             synchronized(LOCK){
@@ -83,7 +84,10 @@ public class MinesweeperServer {
     private void handleConnection(Socket socket) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
+        synchronized (LOCK) {
+            out.print("Welcome to Minesweeper. " + numConnections + " people are playing including you. Type 'help' for help.\n");
+            out.flush();
+        }
         try {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String output = handleRequest(line);
