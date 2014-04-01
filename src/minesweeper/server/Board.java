@@ -48,7 +48,7 @@ public class Board {
     }
     
     private void createBoard(){
-        System.out.println("Create Board " + sizeX + ", " + sizeY);
+        //System.out.println("Create Board " + sizeX + ", " + sizeY);
         for(int i = 0; i < sizeX; i++){
             List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
             for(int j = 0; j < sizeY; j++){
@@ -77,7 +77,7 @@ public class Board {
             int spaceLoc = firstLine.indexOf(" ");
             sizeX = Integer.valueOf(firstLine.substring(spaceLoc+1));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
-            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
+            //System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the board contents remain
 
             //check number of rows
@@ -145,6 +145,9 @@ public class Board {
                     break;
                 }
             }
+            //get rid of an extra space at the end of the line
+            //substring(start, end), end is inclusive
+            board = board.substring(0, board.length()-1);
             board +="\r\n";
         }
         board = board.replace("0", " ");
