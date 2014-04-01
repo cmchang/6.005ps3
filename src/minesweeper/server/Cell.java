@@ -1,5 +1,9 @@
 package minesweeper.server;
-
+/**
+ * 
+ * This class is not thread safe.
+ *
+ */
 public class Cell {
     private String state = "untouched";
     private boolean isBomb;

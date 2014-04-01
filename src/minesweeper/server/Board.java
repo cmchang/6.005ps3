@@ -11,6 +11,14 @@ import java.util.Random;
 
 /**
  * This data structure represents a minesweeper board.
+ * 
+ * Thread safety argument:
+ * The board is thread safe because the public methods that each thread can access is synchronized 
+ * to "this" so only one thread can modify the board at a time.  
+ * 
+ * (The board contains cells but the threads/users do not modify the cells directly.  Only the 
+ * board modifies the cells.  There is guaranteed to be no rep exposure of any Cell.)
+ * 
  */
 public class Board {
     private List<List<Cell>> Board = Collections.synchronizedList(new LinkedList<List<Cell>>());
@@ -51,7 +59,6 @@ public class Board {
     }
     
     private void createBoard(File file){
-        System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
 
         //read in file
         ArrayList<String> linesInFile = new ArrayList<String>();
@@ -68,8 +75,9 @@ public class Board {
             
             String firstLine = linesInFile.get(0);
             int spaceLoc = firstLine.indexOf(" ");
-            sizeX = Integer.valueOf(firstLine.substring(spaceLoc));
+            sizeX = Integer.valueOf(firstLine.substring(spaceLoc+1));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
+            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the board contents remain
 
             //check number of rows
@@ -78,6 +86,12 @@ public class Board {
             }
             
             //build the board
+            for(int x = 0; x < sizeX; x++){
+                List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
+                Board.add(column);   
+            }
+
+            int col = 0;
             for(String curLine: linesInFile){
                 String lineNoSpace = curLine.replace(" ", "");
                 //check the size of the line
@@ -85,17 +99,19 @@ public class Board {
                     throw new RuntimeException("File improperly formatted.");
                 } else {
                     char[] lineOfChars = lineNoSpace.toCharArray();
-                    for(char curChar: lineOfChars){ //REDO: BOARD is rotated
-                        List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
-                        if(curChar == 1){
-                            column.add(new Cell(true));
-                        }else if(curChar == 0){
-                            column.add(new Cell(false));
+                    
+                    for(char curChar: lineOfChars){
+                        if(curChar == '1'){
+                            Board.get(col).add(new Cell(true));
+                        }else if(curChar == '0'){
+                            Board.get(col).add(new Cell(false));
                         }else{
                             throw new RuntimeException("File improperly formatted. A char other than 0 or 1 is found in the board");
                         }
-                        Board.add(column);   
+                        col++;
                     }
+                    
+                    col = 0;
                 }
             }
             
@@ -114,7 +130,7 @@ public class Board {
         return false;
     }
     
-    public String look(){
+    public synchronized String look(){
         String board = "";
         String cellState;
         for(int j = 0; j < sizeY; j++){
@@ -135,25 +151,7 @@ public class Board {
         return board;
     }
     
-    public String showBombs(){
-        String board = "";
-        int isCellBomb;
-        for(int i = 0; i < sizeX; i++){
-            for(int j = 0; j < sizeY; j++){
-                isCellBomb = Board.get(i).get(j).isBomb();
-                switch(isCellBomb){
-                case 0: board += "- ";
-                    break;
-                case 1:   board += "B ";
-                    break;
-                }
-            }
-            board +="\r\n";
-        }
-        return board;
-    }
-    
-    public synchronized boolean isValidPoint(int i, int j) {
+    private boolean isValidPoint(int i, int j) {
         return (i >= 0 && j >= 0 && i < sizeX && j < sizeY);
 
     }
@@ -171,7 +169,7 @@ public class Board {
         return bombCount;
     }
  
-    public String flag (int i, int j){
+    public synchronized String flag (int i, int j){
         if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
             Board.get(i).get(j).flag();
         }
@@ -179,14 +177,14 @@ public class Board {
         return look();
     }
     
-    public String deflag (int i, int j){
+    public synchronized String deflag (int i, int j){
         if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
             Board.get(i).get(j).deflag();
         }
         return look();
     }
     
-    public String dig (int i, int j){
+    public synchronized String dig (int i, int j){
         boolean explosion = false;
         
         if(isValidPoint(i, j) ){
@@ -194,9 +192,7 @@ public class Board {
             if(curCell.isUntouched()){
                 explosion = curCell.dig();
                 
-                System.out.println(i + ", "+ j);
                 if(getNeighboringBombNum(i,j) == 0){
-                    System.out.println("digging neighbors");
                     digNeighbors(i,j);
                 }
                 
@@ -209,10 +205,9 @@ public class Board {
     }
     
     //if called, guaranteed that no neighboring bombs (b/c placement in dig method)
-    public void digNeighbors(int i, int j){
+    private void digNeighbors(int i, int j){
         for(int x = i-1; x<= i+1; x++){
             for(int y = j-1; y <= j+1; y++){
-                System.out.println("dig: " + x + ", " + y);
                 dig(x,y);
             }
         }
