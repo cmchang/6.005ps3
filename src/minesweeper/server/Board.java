@@ -42,11 +42,11 @@ public class Board {
     
     private void createBoard(){
         for(int i = 0; i < sizeX; i++){
-            List<Cell> columns = Collections.synchronizedList(new LinkedList<Cell>());
+            List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
             for(int j = 0; j < sizeY; j++){
-                columns.add(new Cell(addRandomizedBomb()));
+                column.add(new Cell(addRandomizedBomb()));
             }
-            Board.add(columns);
+            Board.add(column);
         }
     }
     
@@ -69,9 +69,38 @@ public class Board {
             reader.close();
             
             String firstLine = linesInFile.get(0);
-            sizeX = //////////
-            
+            int spaceLoc = firstLine.indexOf(" ");
+            sizeX = Integer.valueOf(firstLine.substring(spaceLoc));
+            sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
             linesInFile.remove(0); //now only the board contents remain
+
+            //check number of rows
+            if(linesInFile.size() != sizeY){
+                throw new RuntimeException("File improperly formatted."); 
+            }
+            
+            //build the board
+            for(String curLine: linesInFile){
+                String lineNoSpace = curLine.replace(" ", "");
+                //check the size of the line
+                if (lineNoSpace.length() != sizeX) {
+                    throw new RuntimeException("File improperly formatted.");
+                } else {
+                    char[] lineOfChars = lineNoSpace.toCharArray();
+                    for(char curChar: lineOfChars){
+                        List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
+                        if(curChar == 1){
+                            column.add(new Cell(true));
+                        }else if(curChar == 0){
+                            column.add(new Cell(false));
+                        }else{
+                            throw new RuntimeException("File improperly formatted. A char other than 0 or 1 is found in the board");
+                        }
+                        Board.add(column);   
+                    }
+                }
+            }
+            
         }catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Couldn't read in file.");
