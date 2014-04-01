@@ -119,9 +119,12 @@ public class Board {
             for(int j = 0; j < sizeY; j++){
                 cellState = Board.get(i).get(j).look();
                 switch(cellState){
-                case "untouched": board += "-";
-                case "flagged":   board += "F";
-                case "dug":       board += getNeighboringBombNum(i,j);
+                case "untouched": board += "- ";
+                    break;
+                case "flagged":   board += "F ";
+                    break;
+                case "dug":       board += getNeighboringBombNum(i,j) + " ";
+                    break;
                 }
             }
             board +="\r\n";
@@ -147,13 +150,16 @@ public class Board {
     }
     
     public synchronized boolean isValidPoint(int i, int j) {
-        return (i < 0 || j < 0 || i >= this.sizeX || j >= this.sizeY);
+        return (i >= 0 && j >= 0 && i < sizeX && j < sizeY);
 
     }
     
     private int getNeighboringBombNum(int i, int j){
         int bombCount = 0;
         if(isValidPoint(i, j-1)){ // top neighbor
+            System.out.println("board size: " +  sizeX + ", " + sizeY);
+            System.out.println("i: "+ i + ", j: "+ (j-1));
+            System.out.println(isValidPoint(i, j-1));
             bombCount += Board.get(i).get(j-1).isBomb();
         }else if(isValidPoint(i-1, j-1)){ //top-left corner neighbor
             bombCount += Board.get(i-1).get(j-1).isBomb();

@@ -91,8 +91,17 @@ public class MinesweeperServer {
         try {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String output = handleRequest(line);
-                if (output != null) {
-                    out.println(output);
+                if(output != null) {
+                    if (output.equals("Thanks for playing. Bye.")) {
+                        break;
+                    } else if (output.equals("Game over.")) {
+                        out.print("BOOM!\n");
+                        out.flush();
+                        break;
+                    } else {
+                        out.println(output);
+                        out.flush();
+                    }
                 }
             }
         } finally {
