@@ -18,21 +18,27 @@ public class Cell {
     }
     
     public boolean dig(){
-        isDug = true;
-        state = "dug";
-        if(isBomb){
-            isBomb = false;
-            return true;
+        if(state == "untouched"){
+            isDug = true;
+            state = "dug";
+            if(isBomb){
+                isBomb = false;
+                return true;
+            }
         }
         return false;
     }
 
     public void flag(){
-        state = "flagged";
+        if(!isDug){
+            state = "flagged";
+        }
     }
     
     public void deflag(){
-        state = "untouched";
+        if(!isDug){
+            state = "untouched";
+        }
     }
     
     public int isBomb(){

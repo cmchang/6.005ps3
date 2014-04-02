@@ -15,12 +15,14 @@ public class BoardTest {
      *      (A2) Using constructor given the text file
      * (B) Adding/Removing Flags
      *      (B1) Adding a valid flag
-     *      (B2) Adding an invalid flag
+     *      (B2) Adding an invalid flag (out of bounds point)
      *      (B3) Removing a valid flag
-     *      (B4) Removing an invalid flag
+     *      (B4) Removing an invalid flag (out of bounds point)
+     *      (B5) Adding an invalid flag (on a dug spot)
      * (C) Digs
      *      (C1) Digging a valid point
-     *      (C2) Digging an invalid point
+     *      (C2) Digging an invalid point (out of bounds point)
+     *      (C3) Digging an invalid point (state of point is flagged)
      */
     
     //Tests A1
@@ -97,6 +99,21 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
+    //Test B5
+    @Test public void InvalidFlagDugSpotB5Test(){
+        Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
+        myBoard.dig(0,0);
+        myBoard.flag(0,0);
+        String expectedAnswer = "      1 - 1  \r\n"
+                + "      1 - 1  \r\n"
+                + "      1 1 1  \r\n"
+                + "             \r\n"
+                + "             \r\n"
+                + "1 1          \r\n"
+                + "- 1          \r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
     //Test C1
     @Test public void ValidDigC1Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
@@ -122,6 +139,18 @@ public class BoardTest {
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
+    //Test C3
+    @Test public void DigFlagStateC3Test(){
+        Board myBoard = new Board(true, 9, 4);
+        myBoard.flag(0,0);
+        myBoard.dig(0,0);
+        String expectedAnswer = "F - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
 }
