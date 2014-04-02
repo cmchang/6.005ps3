@@ -13,19 +13,20 @@ public class BoardTest {
      * (A) Creating a Board
      *      (A1) Using constructor given only the debug status, and dimensions of board
      *      (A2) Using constructor given the text file
-     * (B) Adding/Removing Flags
+     * (B) Adding Flags
      *      (B1) Adding a valid flag
      *      (B2) Adding an invalid flag (out of bounds point)
-     *      (B3) Removing a valid flag
-     *      (B4) Removing an invalid flag (out of bounds point)
-     *      (B5) Adding an invalid flag (on a dug spot)
-     *      (B6) Adding an invalid flag (on a already flagged spot)
-     *      (B7) Removing an invalid flag (state of point is untouched and does not have flag)
-     * (C) Digs
-     *      (C1) Digging a valid point
-     *      (C2) Digging an invalid point (out of bounds point)
-     *      (C3) Digging an invalid point (state of point is flagged)
-     *      (C4) Digging an invalid point (state of point already dug)
+     *      (B3) Adding an invalid flag (on a dug spot)
+     *      (B4) Adding an invalid flag (on a already flagged spot)
+     * (C) Removing Flags
+     *      (C1) Removing a valid flag
+     *      (C2) Removing an invalid flag (out of bounds point)
+     *      (C3) Removing an invalid flag (state of point is untouched and does not have flag)
+     * (D) Digs
+     *      (D1) Digging a valid point
+     *      (D2) Digging an invalid point (out of bounds point)
+     *      (D3) Digging an invalid point (state of point is flagged)
+     *      (D4) Digging an invalid point (state of point already dug)
      */
     
     //Tests A1
@@ -80,36 +81,9 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
+    
     //Test B3
-    @Test public void RemoveValidFlagB1Test(){
-        Board myBoard = new Board(true, 9, 4);
-        myBoard.flag(0,0);
-        myBoard.flag(1,1);
-        myBoard.deflag(1,1);
-        String expectedAnswer = 
-                  "F - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
-        assertEquals(myBoard.look(), expectedAnswer);
-    }
-    
-    //Test B4
-    @Test public void RemoveInvalidFlagB1Test(){
-        Board myBoard = new Board(true, 9, 4);
-        myBoard.flag(0,0);
-        myBoard.flag(1,1);
-        myBoard.deflag(10, 10);
-        String expectedAnswer = 
-                  "F - - - - - - - -\r\n"
-                + "- F - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
-        assertEquals(myBoard.look(), expectedAnswer);
-    }
-    
-    //Test B5
-    @Test public void InvalidFlagDugSpotB5Test(){
+    @Test public void InvalidFlagDugSpotB3Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
         myBoard.flag(0,0);
@@ -123,8 +97,8 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Test B6
-    @Test public void AddInvalidFlagOnAlreadyFlaggedB6Test(){
+    //Test B4
+    @Test public void AddInvalidFlagOnAlreadyFlaggedB4Test(){
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,0);
         myBoard.flag(0,0);
@@ -136,8 +110,37 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Tests B7
-    @Test public void RemoveNonexistantFlagB7Test(){
+    //Test C1
+    @Test public void RemoveValidFlagB1Test(){
+        Board myBoard = new Board(true, 9, 4);
+        myBoard.flag(0,0);
+        myBoard.flag(1,1);
+        myBoard.deflag(1,1);
+        String expectedAnswer = 
+                "F - - - - - - - -\r\n"
+                        + "- - - - - - - - -\r\n"
+                        + "- - - - - - - - -\r\n"
+                        + "- - - - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+
+    //Test C2
+    @Test public void RemoveInvalidFlagB1Test(){
+        Board myBoard = new Board(true, 9, 4);
+        myBoard.flag(0,0);
+        myBoard.flag(1,1);
+        myBoard.deflag(10, 10);
+        String expectedAnswer = 
+                "F - - - - - - - -\r\n"
+                        + "- F - - - - - - -\r\n"
+                        + "- - - - - - - - -\r\n"
+                        + "- - - - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+
+    
+    //Tests C3
+    @Test public void RemoveNonexistantFlagC3Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.deflag(0,0);
         String expectedAnswer = 
@@ -151,8 +154,8 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Test C1
-    @Test public void ValidDigC1Test(){
+    //Test D1
+    @Test public void ValidDigD1Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
         String expectedAnswer = 
@@ -166,8 +169,8 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Test C2
-    @Test public void InvalidDigC2Test(){
+    //Test D2
+    @Test public void InvalidDigD2Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(10, 10);
         String expectedAnswer = 
@@ -181,8 +184,8 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Test C3
-    @Test public void InvalidDigFlagStateC3Test(){
+    //Test D3
+    @Test public void InvalidDigFlagStateD3Test(){
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,0);
         myBoard.dig(0,0);
@@ -194,8 +197,8 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //Test C4
-    @Test public void InvalidDigAlreadyDugC4Test(){
+    //Test D4
+    @Test public void InvalidDigAlreadyDugD4Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
         myBoard.dig(0,0);
