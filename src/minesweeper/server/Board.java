@@ -30,7 +30,7 @@ public class Board {
      * This constructs a minesweeper board of size sizeX*sizeY
      * where each cell has a 0.25% probability of containing a bomb
      * 
-     * @param debug state
+     * @param debug, state
      * @param sizeX width of the board
      * @param sizeY height of the board
      */
@@ -42,11 +42,21 @@ public class Board {
         createBoard();
     }
     
+    /**
+     * This constructs a minesweeper board given a text file
+     * 
+     * @param debug, state
+     * @param file, text file with a specified format (indicated in the pset directions)
+     */
     public Board(boolean debug, File file){
         this.debug = debug;
         createBoard(file);
     }
     
+    /**
+     * One of two helper methods to create a board.  
+     * This method creates a board given if the constructor without a file is called.
+     */
     private void createBoard(){
         //System.out.println("Create Board " + sizeX + ", " + sizeY);
         for(int i = 0; i < sizeX; i++){
@@ -58,6 +68,10 @@ public class Board {
         }
     }
     
+    /**
+     * One of two helper methods to create a board.  
+     * This method creates a board given if the constructor with a file is called.
+     */
     private void createBoard(File file){
 
         //read in file
@@ -78,14 +92,15 @@ public class Board {
             sizeX = Integer.valueOf(firstLine.substring(spaceLoc+1));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
             //System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
-            linesInFile.remove(0); //now only the board contents remain
+            linesInFile.remove(0); //now only the contents of the board remain
 
-            //check number of rows
+            //double check the board has the correct number of rows
             if(linesInFile.size() != sizeY){
                 throw new RuntimeException("File improperly formatted."); 
             }
             
-            //build the board
+            //builds the placeholders for the board
+            //adds the appropriate number of lists (the columns) to the Board
             for(int x = 0; x < sizeX; x++){
                 List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
                 Board.add(column);   
@@ -94,7 +109,7 @@ public class Board {
             int col = 0;
             for(String curLine: linesInFile){
                 String lineNoSpace = curLine.replace(" ", "");
-                //check the size of the line
+                //double check the size of the line, makes sure the text file is formatted correctly
                 if (lineNoSpace.length() != sizeX) {
                     throw new RuntimeException("File improperly formatted.");
                 } else {
@@ -110,7 +125,6 @@ public class Board {
                         }
                         col++;
                     }
-                    
                     col = 0;
                 }
             }
