@@ -19,16 +19,20 @@ public class BoardTest {
      *      (B3) Removing a valid flag
      *      (B4) Removing an invalid flag (out of bounds point)
      *      (B5) Adding an invalid flag (on a dug spot)
+     *      (B6) Adding an invalid flag (on a already flagged spot)
+     *      (B7) Removing an invalid flag (state of point is untouched and does not have flag)
      * (C) Digs
      *      (C1) Digging a valid point
      *      (C2) Digging an invalid point (out of bounds point)
      *      (C3) Digging an invalid point (state of point is flagged)
+     *      (C4) Digging an invalid point (state of point already dug)
      */
     
     //Tests A1
     @Test public void CreateBoardA1Test(){
         Board myBoard = new Board(true, 9, 4);
-        String expectedAnswer = "- - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
@@ -41,7 +45,8 @@ public class BoardTest {
     //Tests A2
     @Test public void CreateBoardA2Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
-        String expectedAnswer = "- - - - - - -\r\n"
+        String expectedAnswer = 
+                  "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
@@ -55,7 +60,8 @@ public class BoardTest {
     @Test public void AddValidFlagB1Test(){
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,0);
-        String expectedAnswer = "F - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "F - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
@@ -66,7 +72,8 @@ public class BoardTest {
     @Test public void AddInvalidFlagB2Test(){
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,11);
-        String expectedAnswer = "- - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
@@ -79,7 +86,8 @@ public class BoardTest {
         myBoard.flag(0,0);
         myBoard.flag(1,1);
         myBoard.deflag(1,1);
-        String expectedAnswer = "F - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "F - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
@@ -92,7 +100,8 @@ public class BoardTest {
         myBoard.flag(0,0);
         myBoard.flag(1,1);
         myBoard.deflag(10, 10);
-        String expectedAnswer = "F - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "F - - - - - - - -\r\n"
                 + "- F - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
@@ -114,11 +123,40 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
+    //Test B6
+    @Test public void AddInvalidFlagOnAlreadyFlaggedB6Test(){
+        Board myBoard = new Board(true, 9, 4);
+        myBoard.flag(0,0);
+        myBoard.flag(0,0);
+        String expectedAnswer = 
+                  "F - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n"
+                + "- - - - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
+    //Tests B7
+    @Test public void RemoveNonexistantFlagB7Test(){
+        Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
+        myBoard.deflag(0,0);
+        String expectedAnswer = 
+                  "- - - - - - -\r\n"
+                + "- - - - - - -\r\n"
+                + "- - - - - - -\r\n"
+                + "- - - - - - -\r\n"
+                + "- - - - - - -\r\n"
+                + "- - - - - - -\r\n"
+                + "- - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
     //Test C1
     @Test public void ValidDigC1Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
-        String expectedAnswer = "      1 - 1  \r\n"
+        String expectedAnswer = 
+                  "      1 - 1  \r\n"
                 + "      1 - 1  \r\n"
                 + "      1 1 1  \r\n"
                 + "             \r\n"
@@ -132,7 +170,8 @@ public class BoardTest {
     @Test public void InvalidDigC2Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(10, 10);
-        String expectedAnswer = "- - - - - - -\r\n"
+        String expectedAnswer = 
+                  "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
                 + "- - - - - - -\r\n"
@@ -143,14 +182,31 @@ public class BoardTest {
     }
     
     //Test C3
-    @Test public void DigFlagStateC3Test(){
+    @Test public void InvalidDigFlagStateC3Test(){
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,0);
         myBoard.dig(0,0);
-        String expectedAnswer = "F - - - - - - - -\r\n"
+        String expectedAnswer = 
+                  "F - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n"
                 + "- - - - - - - - -\r\n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
+    //Test C4
+    @Test public void InvalidDigAlreadyDugC4Test(){
+        Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
+        myBoard.dig(0,0);
+        myBoard.dig(0,0);
+        String expectedAnswer = 
+                  "      1 - 1  \r\n"
+                + "      1 - 1  \r\n"
+                + "      1 1 1  \r\n"
+                + "             \r\n"
+                + "             \r\n"
+                + "1 1          \r\n"
+                + "- 1          \r\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
 }
