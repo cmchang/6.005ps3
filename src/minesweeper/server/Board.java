@@ -50,7 +50,6 @@ public class Board {
      * @param file, text file with a specified format (indicated in the pset directions)
      */
     public Board(boolean debug, File file){
-        System.out.println("creating board, debug: " + debug);
         this.debug = debug;
         createBoard(file);
     }
@@ -176,6 +175,8 @@ public class Board {
 
     }
     
+    //note: this method is only called on a space if the cell is already dug
+    //      so the cell itself can not contain a bomb
     private int getNeighboringBombNum(int i, int j){
         int bombCount = 0;
 

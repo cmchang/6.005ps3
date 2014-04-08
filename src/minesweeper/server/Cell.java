@@ -7,7 +7,6 @@ package minesweeper.server;
 public class Cell {
     private String state = "untouched";
     private boolean isBomb;
-    private boolean isDug = false;
     
     public Cell(boolean isBomb){
         this.isBomb = isBomb;
@@ -19,7 +18,6 @@ public class Cell {
     
     public boolean dig(){
         if(state == "untouched"){
-            isDug = true;
             state = "dug";
             if(isBomb){
                 isBomb = false;
@@ -30,17 +28,18 @@ public class Cell {
     }
 
     public void flag(){
-        if(!isDug){
+        if(state != "dug"){
             state = "flagged";
         }
     }
     
     public void deflag(){
-        if(!isDug){
+        if(state != "dug"){
             state = "untouched";
         }
     }
     
+    //Note: this method returns a 1 if it is a bomb and 0 if it is not a bomb
     public int isBomb(){
         if(isBomb){
             return 1;
