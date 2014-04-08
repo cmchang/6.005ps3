@@ -94,8 +94,8 @@ public class MinesweeperServer {
                 if(output != null) {
                     if (output.equals("Thanks for playing. Bye.")) {
                         break;
-                    } else if (output.equals("BOOM!\n")) {
-                        out.print("BOOM!\nGame over!\n");
+                    } else if (output.equals("BOOM!\r\n")) {
+                        out.print("BOOM!\r\n");
                         out.flush();
                         if(board.isDebug() == false) break;
                     } else {

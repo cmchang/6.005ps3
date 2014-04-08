@@ -39,7 +39,7 @@ public class Board {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.debug = debug;
-        boardSizeMessage = "Board: " + sizeY + " columns by " + sizeX + " rows.";
+        boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
         createBoard();
     }
     
@@ -50,6 +50,7 @@ public class Board {
      * @param file, text file with a specified format (indicated in the pset directions)
      */
     public Board(boolean debug, File file){
+        System.out.println("creating board, debug: " + debug);
         this.debug = debug;
         createBoard(file);
     }
@@ -92,7 +93,7 @@ public class Board {
             int spaceLoc = firstLine.indexOf(" ");
             sizeX = Integer.valueOf(firstLine.substring(0, spaceLoc));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
-            boardSizeMessage = "Board: " + sizeY + " columns by " + sizeX + " rows.";
+            boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
 //            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the contents of the board remain
 

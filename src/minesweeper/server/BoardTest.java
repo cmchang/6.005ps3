@@ -33,10 +33,10 @@ public class BoardTest {
     @Test public void CreateBoardA1Test(){
         Board myBoard = new Board(true, 9, 4);
         String expectedAnswer = 
-                  "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
+                  "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -47,13 +47,13 @@ public class BoardTest {
     @Test public void CreateBoardA2Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         String expectedAnswer = 
-                  "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n";
+                  "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -62,10 +62,10 @@ public class BoardTest {
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,0);
         String expectedAnswer = 
-                  "F - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
+                  "F - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -74,10 +74,10 @@ public class BoardTest {
         Board myBoard = new Board(true, 9, 4);
         myBoard.flag(0,11);
         String expectedAnswer = 
-                  "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
+                  "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -87,13 +87,13 @@ public class BoardTest {
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
         myBoard.flag(0,0);
-        String expectedAnswer = "      1 - 1  \r\n"
-                + "      1 - 1  \r\n"
-                + "      1 1 1  \r\n"
-                + "             \r\n"
-                + "             \r\n"
-                + "1 1          \r\n"
-                + "- 1          \r\n";
+        String expectedAnswer = "      1 - 1  \n"
+                + "      1 - 1  \n"
+                + "      1 1 1  \n"
+                + "             \n"
+                + "             \n"
+                + "1 1          \n"
+                + "- 1          \n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -103,10 +103,10 @@ public class BoardTest {
         myBoard.flag(0,0);
         myBoard.flag(0,0);
         String expectedAnswer = 
-                  "F - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
+                  "F - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -117,10 +117,10 @@ public class BoardTest {
         myBoard.flag(1,1);
         myBoard.deflag(1,1);
         String expectedAnswer = 
-                "F - - - - - - - -\r\n"
-                        + "- - - - - - - - -\r\n"
-                        + "- - - - - - - - -\r\n"
-                        + "- - - - - - - - -\r\n";
+                "F - - - - - - - -\n"
+                        + "- - - - - - - - -\n"
+                        + "- - - - - - - - -\n"
+                        + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
 
@@ -131,10 +131,10 @@ public class BoardTest {
         myBoard.flag(1,1);
         myBoard.deflag(10, 10);
         String expectedAnswer = 
-                "F - - - - - - - -\r\n"
-                        + "- F - - - - - - -\r\n"
-                        + "- - - - - - - - -\r\n"
-                        + "- - - - - - - - -\r\n";
+                "F - - - - - - - -\n"
+                        + "- F - - - - - - -\n"
+                        + "- - - - - - - - -\n"
+                        + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
 
@@ -144,13 +144,13 @@ public class BoardTest {
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.deflag(0,0);
         String expectedAnswer = 
-                  "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n";
+                  "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -159,13 +159,13 @@ public class BoardTest {
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(0,0);
         String expectedAnswer = 
-                  "      1 - 1  \r\n"
-                + "      1 - 1  \r\n"
-                + "      1 1 1  \r\n"
-                + "             \r\n"
-                + "             \r\n"
-                + "1 1          \r\n"
-                + "- 1          \r\n";
+                  "      1 - 1  \n"
+                + "      1 - 1  \n"
+                + "      1 1 1  \n"
+                + "             \n"
+                + "             \n"
+                + "1 1          \n"
+                + "- 1          \n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -174,13 +174,13 @@ public class BoardTest {
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
         myBoard.dig(10, 10);
         String expectedAnswer = 
-                  "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n"
-                + "- - - - - - -\r\n";
+                  "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n"
+                + "- - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -190,10 +190,10 @@ public class BoardTest {
         myBoard.flag(0,0);
         myBoard.dig(0,0);
         String expectedAnswer = 
-                  "F - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n"
-                + "- - - - - - - - -\r\n";
+                  "F - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n"
+                + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
@@ -203,13 +203,13 @@ public class BoardTest {
         myBoard.dig(0,0);
         myBoard.dig(0,0);
         String expectedAnswer = 
-                  "      1 - 1  \r\n"
-                + "      1 - 1  \r\n"
-                + "      1 1 1  \r\n"
-                + "             \r\n"
-                + "             \r\n"
-                + "1 1          \r\n"
-                + "- 1          \r\n";
+                  "      1 - 1  \n"
+                + "      1 - 1  \n"
+                + "      1 1 1  \n"
+                + "             \n"
+                + "             \n"
+                + "1 1          \n"
+                + "- 1          \n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
 }
