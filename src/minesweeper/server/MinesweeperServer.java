@@ -85,7 +85,7 @@ public class MinesweeperServer {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         synchronized (LOCK) {
-            out.print("Welcome to Minesweeper. " + numConnections + " people are playing including you. Type 'help' for help.\n");
+            out.print("Welcome to Minesweeper. " + board.getBoardSizeMessage() +" Players: "+ numConnections + " including you. Type 'help' for help.\r\n");
             out.flush();
         }
         try {
@@ -94,10 +94,10 @@ public class MinesweeperServer {
                 if(output != null) {
                     if (output.equals("Thanks for playing. Bye.")) {
                         break;
-                    } else if (output.equals("Game over!")) {
-                        out.print("BOOM!\n");
+                    } else if (output.equals("BOOM!\n")) {
+                        out.print("BOOM!\nGame over!\n");
                         out.flush();
-                        break;
+                        if(board.isDebug() == false) break;
                     } else {
                         out.println(output);
                         out.flush();

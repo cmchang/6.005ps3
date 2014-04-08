@@ -25,6 +25,7 @@ public class Board {
     private int sizeX;
     private int sizeY;
     private final boolean debug;
+    private String boardSizeMessage;
     
     /**
      * This constructs a minesweeper board of size sizeX*sizeY
@@ -38,7 +39,7 @@ public class Board {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.debug = debug;
-        
+        boardSizeMessage = "Board: " + sizeY + " columns by " + sizeX + " rows.";
         createBoard();
     }
     
@@ -89,9 +90,10 @@ public class Board {
             
             String firstLine = linesInFile.get(0);
             int spaceLoc = firstLine.indexOf(" ");
-            sizeX = Integer.valueOf(firstLine.substring(spaceLoc+1));
+            sizeX = Integer.valueOf(firstLine.substring(0, spaceLoc));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
-            //System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
+            boardSizeMessage = "Board: " + sizeY + " columns by " + sizeX + " rows.";
+//            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the contents of the board remain
 
             //double check the board has the correct number of rows
@@ -162,7 +164,7 @@ public class Board {
             //get rid of an extra space at the end of the line
             //substring(start, end), end is inclusive
             board = board.substring(0, board.length()-1);
-            board +="\r\n";
+            board +="\n"; // \r\n?????? GAH
         }
         board = board.replace("0", " ");
         return board;
@@ -187,7 +189,7 @@ public class Board {
     }
  
     public synchronized String flag (int i, int j){
-        if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
+        if(isValidPoint(i, j) ){
             Board.get(i).get(j).flag();
         }
         
@@ -195,7 +197,7 @@ public class Board {
     }
     
     public synchronized String deflag (int i, int j){
-        if(i >= 0 && i <= sizeX && j >= 0 && j <= sizeY){
+        if(isValidPoint(i, j) ){
             Board.get(i).get(j).deflag();
         }
         return look();
@@ -214,7 +216,7 @@ public class Board {
                 }
                 
                 if(explosion){
-                    return "BOOM!\n";
+                    return "BOOM!\r\n";
                 }
             }
         }
@@ -229,5 +231,13 @@ public class Board {
             }
         }
         
+    }
+    
+    public boolean isDebug(){
+        return debug;
+    }
+    
+    public String getBoardSizeMessage(){
+        return new String(boardSizeMessage);
     }
 }
