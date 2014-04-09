@@ -5,7 +5,12 @@ import java.net.*;
 import java.util.*;
 
 /**
- * TODO: thread safety argument goes here!
+ * Thread safety argument:
+ * The board is thread safe because the public methods that each thread can access is synchronized 
+ * to "this" so only one thread can modify the board at a time.  
+ * 
+ * (The board contains cells but the threads/users do not modify the cells directly.  Only the 
+ * board modifies the cells.  There is guaranteed to be no rep exposure of any Cell.)
  */
 public class MinesweeperServer {
     private final ServerSocket serverSocket;
