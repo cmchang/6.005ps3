@@ -42,9 +42,6 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
     
-    //couldn't figure out how to read the file in time, but this constructor 
-    //worked when I tested it manually
-    
     //Tests A2
     @Test public void CreateBoardA2Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
@@ -82,7 +79,6 @@ public class BoardTest {
                 + "- - - - - - - - -\n";
         assertEquals(myBoard.look(), expectedAnswer);
     }
-    
     
     //Test B3
     @Test public void InvalidFlagDugSpotB3Test(){
@@ -140,7 +136,6 @@ public class BoardTest {
         assertEquals(myBoard.look(), expectedAnswer);
     }
 
-    
     //Tests C3
     @Test public void RemoveNonexistantFlagC3Test(){
         Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));

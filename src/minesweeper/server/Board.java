@@ -23,10 +23,9 @@ import static org.junit.Assert.*;
  */
 public class Board {
     private List<List<Cell>> Board = Collections.synchronizedList(new LinkedList<List<Cell>>());
-    private int sizeX;
-    private int sizeY;
+    private int sizeX; //number of columns
+    private int sizeY; //number of rows
     private final boolean debug;
-    private String boardSizeMessage;
     
     /**
      * This constructs a minesweeper board of size sizeX*sizeY
@@ -40,7 +39,6 @@ public class Board {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.debug = debug;
-        boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
         createBoard();
         checkRep();
     }
@@ -95,7 +93,6 @@ public class Board {
             int spaceLoc = firstLine.indexOf(" ");
             sizeX = Integer.valueOf(firstLine.substring(0, spaceLoc));
             sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
-            boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
 //            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the contents of the board remain
 
@@ -142,9 +139,7 @@ public class Board {
     private boolean addRandomizedBomb(){
         Random randNumGenerator = new Random(); 
         int randNum = randNumGenerator.nextInt(4); //generates random integer from 0 (inclusive) to 4 (exclusive)
-        if(randNum == 0){ // 1/4 chance of being 0
-            return true;
-        }
+        if(randNum == 0) return true; // 1/4 chance of being 0
         return false;
     }
     
@@ -183,27 +178,21 @@ public class Board {
 
         for(int x = i-1; x<= i+1; x++){
             for(int y = j-1; y <= j+1; y++){
-                if(isValidPoint(x, y)){
-                    bombCount += Board.get(x).get(y).isBomb();
-                }
+                if(isValidPoint(x, y)) bombCount += Board.get(x).get(y).isBomb();
             }
         }
         return bombCount;
     }
  
     public synchronized String flag (int i, int j){
-        if(isValidPoint(i, j) ){
-            Board.get(i).get(j).flag();
-        }
+        if(isValidPoint(i, j) ) Board.get(i).get(j).flag();
         
         checkRep();
         return look();
     }
     
     public synchronized String deflag (int i, int j){
-        if(isValidPoint(i, j) ){
-            Board.get(i).get(j).deflag();
-        }
+        if(isValidPoint(i, j) ) Board.get(i).get(j).deflag();
         checkRep();
         return look();
     }
@@ -237,7 +226,7 @@ public class Board {
     }
     
     public String getBoardSizeMessage(){
-        return new String(boardSizeMessage);
+        return "Board: " + sizeX + " columns by " + sizeY + " rows.";
     }
     
     public void checkRep(){
