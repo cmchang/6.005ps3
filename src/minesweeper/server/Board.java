@@ -161,7 +161,7 @@ public class Board {
             //get rid of an extra space at the end of the line
             //substring(start, end), end is inclusive
             board = board.substring(0, board.length()-1);
-            board +="\n"; // \r\n?????? GAH
+            board +="\n";
         }
         board = board.replace("0", " ");
         return board;

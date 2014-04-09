@@ -28,22 +28,16 @@ public class Cell {
     }
 
     public void flag(){
-        if(state != "dug"){
-            state = "flagged";
-        }
+        if(state != "dug") state = "flagged";
     }
     
     public void deflag(){
-        if(state != "dug"){
-            state = "untouched";
-        }
+        if(state != "dug") state = "untouched";
     }
     
     //Note: this method returns a 1 if it is a bomb and 0 if it is not a bomb
     public int isBomb(){
-        if(isBomb){
-            return 1;
-        }
+        if(isBomb) return 1;
         return 0;
     }
     
