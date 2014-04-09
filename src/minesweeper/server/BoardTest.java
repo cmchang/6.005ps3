@@ -10,6 +10,7 @@ public class BoardTest {
 
     /**
      * Test for the Board Class:
+     * 
      * (A) Creating a Board
      *      (A1) Using constructor given only the debug status, and dimensions of board
      *      (A2) Using constructor given the text file
@@ -27,6 +28,7 @@ public class BoardTest {
      *      (D2) Digging an invalid point (out of bounds point)
      *      (D3) Digging an invalid point (state of point is flagged)
      *      (D4) Digging an invalid point (state of point already dug)
+     *      (D5) Digginb a bomb
      */
     
     //Tests A1
@@ -206,6 +208,21 @@ public class BoardTest {
                   "      1 - 1  \n"
                 + "      1 - 1  \n"
                 + "      1 1 1  \n"
+                + "             \n"
+                + "             \n"
+                + "1 1          \n"
+                + "- 1          \n";
+        assertEquals(myBoard.look(), expectedAnswer);
+    }
+    
+    //Test D5
+    @Test public void DigABombD5Test(){
+        Board myBoard = new Board(true, new File("src/minesweeper/server/boardFile.txt"));
+        myBoard.dig(4,1);
+        String expectedAnswer = 
+                  "             \n"
+                + "             \n"
+                + "             \n"
                 + "             \n"
                 + "             \n"
                 + "1 1          \n"
