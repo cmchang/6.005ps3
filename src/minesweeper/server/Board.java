@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
  */
 public class Board {
     private List<List<Cell>> Board = Collections.synchronizedList(new LinkedList<List<Cell>>());
-    private int sizeX;
     private int sizeY;
+    private int sizeX;
     private final boolean debug;
     private String boardSizeMessage;
     
@@ -37,8 +37,8 @@ public class Board {
      * @param sizeY height of the board
      */
     public Board(boolean debug, int sizeX, int sizeY){
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
+        this.sizeY = sizeX;
+        this.sizeX = sizeY;
         this.debug = debug;
         boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
         createBoard();
@@ -63,9 +63,9 @@ public class Board {
      */
     private void createBoard(){
         //System.out.println("Create Board " + sizeX + ", " + sizeY);
-        for(int i = 0; i < sizeX; i++){
+        for(int i = 0; i < sizeY; i++){
             List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
-            for(int j = 0; j < sizeY; j++){
+            for(int j = 0; j < sizeX; j++){
                 column.add(new Cell(addRandomizedBomb()));
             }
             Board.add(column);
@@ -93,20 +93,21 @@ public class Board {
             
             String firstLine = linesInFile.get(0);
             int spaceLoc = firstLine.indexOf(" ");
-            sizeX = Integer.valueOf(firstLine.substring(0, spaceLoc));
-            sizeY = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
+            
+            sizeY = Integer.valueOf(firstLine.substring(0, spaceLoc));
+            sizeX = Integer.valueOf(firstLine.substring(spaceLoc+1, firstLine.length()));
             boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
 //            System.out.println("Create Board with File "+ sizeX + ", " + sizeY);
             linesInFile.remove(0); //now only the contents of the board remain
 
             //double check the board has the correct number of rows
-            if(linesInFile.size() != sizeY){
+            if(linesInFile.size() != sizeX){
                 throw new RuntimeException("File improperly formatted."); 
             }
             
             //builds the placeholders for the board
             //adds the appropriate number of lists (the columns) to the Board
-            for(int x = 0; x < sizeX; x++){
+            for(int x = 0; x < sizeY; x++){
                 List<Cell> column = Collections.synchronizedList(new LinkedList<Cell>());
                 Board.add(column);   
             }
@@ -115,7 +116,7 @@ public class Board {
             for(String curLine: linesInFile){
                 String lineNoSpace = curLine.replace(" ", "");
                 //double check the size of the line, makes sure the text file is formatted correctly
-                if (lineNoSpace.length() != sizeX) {
+                if (lineNoSpace.length() != sizeY) {
                     throw new RuntimeException("File improperly formatted.");
                 } else {
                     char[] lineOfChars = lineNoSpace.toCharArray();
@@ -151,8 +152,8 @@ public class Board {
     public synchronized String look(){
         String board = "";
         String cellState;
-        for(int j = 0; j < sizeY; j++){
-            for(int i = 0; i < sizeX; i++){
+        for(int j = 0; j < sizeX; j++){
+            for(int i = 0; i < sizeY; i++){
                 cellState = Board.get(i).get(j).look();
                 switch(cellState){
                 case "untouched": board += "- ";
@@ -173,7 +174,7 @@ public class Board {
     }
     
     private boolean isValidPoint(int i, int j) {
-        return (i >= 0 && j >= 0 && i < sizeX && j < sizeY);
+        return (i >= 0 && j >= 0 && i < sizeY && j < sizeX);
     }
     
     //note: this method is only called on a space if the cell is already dug
@@ -241,9 +242,9 @@ public class Board {
     }
     
     public void checkRep(){
-        boolean checkSizeX = (Board.size() == sizeX);
+        boolean checkSizeX = (Board.size() == sizeY);
         boolean checkSizeY = true;
-        for(List<Cell> list: Board) if(list.size() != sizeY) checkSizeY = false;
+        for(List<Cell> list: Board) if(list.size() != sizeX) checkSizeY = false;
         assertTrue("The board no longer matches the initialized sizes.  The board is incorrect.", checkSizeX && checkSizeY);
     }
     
