@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import static org.junit.Assert.*;
 
 /**
  * This data structure represents a minesweeper board.
@@ -41,6 +42,7 @@ public class Board {
         this.debug = debug;
         boardSizeMessage = "Board: " + sizeX + " columns by " + sizeY + " rows.";
         createBoard();
+        checkRep();
     }
     
     /**
@@ -52,6 +54,7 @@ public class Board {
     public Board(boolean debug, File file){
         this.debug = debug;
         createBoard(file);
+        checkRep();
     }
     
     /**
@@ -130,7 +133,6 @@ public class Board {
                     col = 0;
                 }
             }
-            
         }catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Couldn't read in file.");
@@ -172,7 +174,6 @@ public class Board {
     
     private boolean isValidPoint(int i, int j) {
         return (i >= 0 && j >= 0 && i < sizeX && j < sizeY);
-
     }
     
     //note: this method is only called on a space if the cell is already dug
@@ -195,6 +196,7 @@ public class Board {
             Board.get(i).get(j).flag();
         }
         
+        checkRep();
         return look();
     }
     
@@ -202,6 +204,7 @@ public class Board {
         if(isValidPoint(i, j) ){
             Board.get(i).get(j).deflag();
         }
+        checkRep();
         return look();
     }
     
@@ -212,16 +215,11 @@ public class Board {
             Cell curCell = Board.get(i).get(j);
             if(curCell.isUntouched()){
                 explosion = curCell.dig();
-                
-                if(getNeighboringBombNum(i,j) == 0){
-                    digNeighbors(i,j);
-                }
-                
-                if(explosion){
-                    return "BOOM!\r\n";
-                }
+                if(getNeighboringBombNum(i,j) == 0) digNeighbors(i,j);
+                if(explosion) return "BOOM!\r\n";
             }
         }
+        checkRep();
         return look();
     }
     
@@ -232,7 +230,6 @@ public class Board {
                 dig(x,y);
             }
         }
-        
     }
     
     public boolean isDebug(){
@@ -242,4 +239,12 @@ public class Board {
     public String getBoardSizeMessage(){
         return new String(boardSizeMessage);
     }
+    
+    public void checkRep(){
+        boolean checkSizeX = (Board.size() == sizeX);
+        boolean checkSizeY = true;
+        for(List<Cell> list: Board) if(list.size() != sizeY) checkSizeY = false;
+        assertTrue("The board no longer matches the initialized sizes.  The board is incorrect.", checkSizeX && checkSizeY);
+    }
+    
 }

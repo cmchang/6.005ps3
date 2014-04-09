@@ -28,7 +28,7 @@ public class BoardTest {
      *      (D2) Digging an invalid point (out of bounds point)
      *      (D3) Digging an invalid point (state of point is flagged)
      *      (D4) Digging an invalid point (state of point already dug)
-     *      (D5) Digginb a bomb
+     *      (D5) Digging a bomb
      */
     
     //Tests A1
